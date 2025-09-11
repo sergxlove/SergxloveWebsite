@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergxlove WebSite</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .border-container {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .border-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(
+                90deg,
+                #ff0000, #ff8000, #ffff00, #80ff00,
+                #00ff00, #00ff80, #00ffff, #0080ff,
+                #0000ff, #8000ff, #ff00ff, #ff0080,
+                #ff0000
+            );
+            background-size: 1400% 100%;
+            animation: smooth-rainbow 12s ease infinite;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .border-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(
+                180deg,
+                #ff0000, #ff8000, #ffff00, #80ff00,
+                #00ff00, #00ff80, #00ffff, #0080ff,
+                #0000ff, #8000ff, #ff00ff, #ff0080,
+                #ff0000
+            );
+            background-size: 100% 1400%;
+            animation: smooth-rainbow 12s ease infinite;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .border-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(
+                90deg,
+                #ff0000, #ff8000, #ffff00, #80ff00,
+                #00ff00, #00ff80, #00ffff, #0080ff,
+                #0000ff, #8000ff, #ff00ff, #ff0080,
+                #ff0000
+            );
+            background-size: 1400% 100%;
+            animation: smooth-rainbow 12s ease infinite;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .border-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(
+                180deg,
+                #ff0000, #ff8000, #ffff00, #80ff00,
+                #00ff00, #00ff80, #00ffff, #0080ff,
+                #0000ff, #8000ff, #ff00ff, #ff0080,
+                #ff0000
+            );
+            background-size: 100% 1400%;
+            animation: smooth-rainbow 12s ease infinite;
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 96px;
+            font-weight: bold;
+            text-align: center;
+            background: linear-gradient(
+                90deg,
+                #ff0000, #ff8000, #ffff00, #80ff00,
+                #00ff00, #00ff80, #00ffff, #0080ff,
+                #0000ff, #8000ff, #ff00ff, #ff0080,
+                #ff0000
+            );
+            background-size: 1400% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: smooth-rainbow 12s ease infinite;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.6);
+            padding: 60px;
+            z-index: 1001;
+            white-space: nowrap;
+        }
+        
+        @keyframes smooth-rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            16.6% {
+                background-position: 16.6% 50%;
+            }
+            33.3% {
+                background-position: 33.3% 50%;
+            }
+            50% {
+                background-position: 50% 50%;
+            }
+            66.6% {
+                background-position: 66.6% 50%;
+            }
+            83.3% {
+                background-position: 83.3% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .center-text::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: inherit;
+            background-size: 1400% 100%;
+            filter: blur(45px) opacity(0.5);
+            z-index: -1;
+            animation: smooth-rainbow 12s ease infinite;
+            border-radius: 50px;
+        }
+        
+        @media (max-width: 1200px) {
+            .center-text {
+                font-size: 84px;
+                padding: 50px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .center-text {
+                font-size: 72px;
+                padding: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .center-text {
+                font-size: 60px;
+                padding: 35px;
+                white-space: normal;
+                max-width: 90%;
+            }
+            
+            .border-container {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+                bottom: 8px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .center-text {
+                font-size: 48px;
+                padding: 30px;
+            }
+            
+            .border-container {
+                top: 6px;
+                left: 6px;
+                right: 6px;
+                bottom: 6px;
+            }
+            
+            .border-top, .border-bottom {
+                height: 3px;
+            }
+            
+            .border-left, .border-right {
+                width: 3px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .center-text {
+                font-size: 36px;
+                padding: 25px;
+            }
+            
+            .border-container {
+                top: 5px;
+                left: 5px;
+                right: 5px;
+                bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="border-container">
+        <div class="border-top"></div>
+        <div class="border-right"></div>
+        <div class="border-bottom"></div>
+        <div class="border-left"></div>
+    </div>
+    <div class="center-text">Sergxlove WebSite</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const borders = document.querySelectorAll('[class*="border-"]');
+            const text = document.querySelector('.center-text');
+            borders.forEach(border => border.style.opacity = '0');
+            text.style.opacity = '0';
+            setTimeout(() => {
+                borders.forEach(border => {
+                    border.style.transition = 'opacity 1.5s ease-in-out';
+                    border.style.opacity = '1';
+                });
+                text.style.transition = 'opacity 1.5s ease-in-out';
+                text.style.opacity = '1';
+            }, 100);
+            
+            function adjustAnimationSpeed() {
+                const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const duration = isReducedMotion ? '20s' : '12s';
+                
+                borders.forEach(border => {
+                    border.style.animationDuration = duration;
+                });
+                text.style.animationDuration = duration;
+            }
+            
+            adjustAnimationSpeed();
+            window.addEventListener('resize', adjustAnimationSpeed);
+        });
+    </script>
+</body>
+</html>
