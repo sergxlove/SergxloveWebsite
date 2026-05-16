@@ -379,7 +379,8 @@
             }
         }
         
-        .projects-grid > div {
+        .projects-grid > div,
+        .hidden-projects > div {
             height: auto;
             display: flex;
         }
@@ -431,13 +432,14 @@
             margin-bottom: 1rem;
         }
 
-        .skills-cloud {
+        .skills-cloud, .hidden-skills {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
+            margin-top: 0;
+            margin-bottom: 0;
         }
+        
         .skill-item {
             background: #171C26;
             border-radius: 60px;
@@ -482,6 +484,60 @@
             backdrop-filter: blur(8px);
             white-space: normal;
             word-wrap: break-word;
+        }
+
+        .expandable-content {
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 0;
+        }
+        
+        .expandable-content-inner {
+            padding-top: 2rem;
+        }
+        
+        .hidden-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .hidden-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            align-items: stretch;
+        }
+        
+        @media (min-width: 1100px) {
+            .hidden-projects {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .show-more-btn {
+            display: block;
+            margin: 2rem auto 0;
+            padding: 12px 32px;
+            background: linear-gradient(95deg, #6C63FF, #5849d6);
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 18px rgba(108, 99, 255, 0.35);
+            width: fit-content;
+        }
+        .show-more-btn:hover {
+            transform: scale(1.02);
+            background: linear-gradient(95deg, #8a7aff, #6c5be6);
+            box-shadow: 0 14px 26px rgba(108, 99, 255, 0.6);
+        }
+        
+        .section-footer {
+            text-align: center;
         }
 
         .contact-links {
@@ -608,6 +664,14 @@
                 <div class="section-line"></div>
             </div>
             <div class="skills-cloud" id="skillsList"></div>
+            <div id="hiddenSkillsContainer" class="expandable-content">
+                <div class="expandable-content-inner">
+                    <div class="hidden-skills" id="hiddenSkillsList"></div>
+                </div>
+            </div>
+            <div class="section-footer">
+                <button class="show-more-btn" id="showMoreSkillsBtn">Показать все навыки</button>
+            </div>
         </div>
     </section>
 
@@ -618,7 +682,15 @@
                 <div class="section-line"></div>
             </div>
             <div class="projects-grid" id="projectsGrid"></div>
-            <div style="text-align: center; margin-top: 3rem;">
+            <div id="hiddenProjectsContainer" class="expandable-content">
+                <div class="expandable-content-inner">
+                    <div class="hidden-projects" id="hiddenProjectsGrid"></div>
+                </div>
+            </div>
+            <div class="section-footer">
+                <button class="show-more-btn" id="showMoreProjectsBtn">Показать все проекты</button>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
                 <p style="color: #AE9FFF;"><i class="fab fa-github"></i> Больше кода на GitHub — <strong style="color:#b77cff;">github.com/sergxlove</strong></p>
             </div>
         </div>
@@ -690,7 +762,7 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    const projectsData = [
+    const allProjectsData = [
         {
             title: "Skill Trade",
             description: "Мультипользовательская образовательная платформа на микросервисной архитектуре. Студенты находят и проходят платные курсы с отслеживанием прогресса, авторы создают курсы через визуальный редактор, администраторы модерируют контент.",
@@ -749,7 +821,8 @@
         }
     ];
 
-    const skillsWithDesc = [
+    // ВСЕ НАВЫКИ
+    const allSkillsWithDesc = [
         { name: "C++", desc: "Мощный язык системного программирования для высокопроизводительных модулей" },
         { name: "C#", desc: "Основной язык разработки: ООП, асинхронность, LINQ, Pattern Matching" },
         { name: "Python", desc: "Скрипты для автоматизации, прототипирование, анализ данных" },
@@ -787,7 +860,12 @@
         { name: "Windows", desc: "Основная платформа разработки" },
         { name: "Ubuntu", desc: "Популярный дистрибутив Linux" },
         { name: "Debian", desc: "Стабильный дистрибутив Linux" },
-        { name: "Astra Linux", desc: "Российский дистрибутив для защищённых систем" }
+        { name: "Astra Linux", desc: "Российский дистрибутив для защищённых систем" },
+        { name: "xUnit", desc: "Фреймворк для unit-тестирования .NET приложений. Поддержка теорий, фактов, асинхронных тестов" },
+        { name: "nUnit", desc: "Популярный фреймворк для unit-тестирования. Мощные assertions, параметризованные тесты, категории" },
+        { name: "msTest", desc: "Официальный тестовый фреймворк от Microsoft. Интеграция с VSTest, Data Driven Testing" },
+        { name: "MediatR", desc: "Библиотека для реализации паттерна Mediator в .NET. Упрощает обработку запросов, команд и уведомлений, уменьшает связанность компонентов" },
+        { name: "CQRS", desc: "Архитектурный паттерн Command Query Responsibility Segregation. Разделение операций чтения и записи для масштабируемых систем" }
     ];
 
     let activeTooltip = null;
@@ -838,58 +916,153 @@
             "Elasticsearch": "fas fa-search", "Logstash": "fas fa-chart-line", "Kibana": "fas fa-chart-pie",
             "YARP": "fas fa-network-wired", "Seq": "fas fa-list", "Visual Studio": "fas fa-code",
             "VS Code": "fas fa-code", "Windows": "fab fa-windows", "Ubuntu": "fab fa-ubuntu",
-            "Debian": "fab fa-linux", "Astra Linux": "fas fa-laptop-code"
+            "Debian": "fab fa-linux", "Astra Linux": "fas fa-laptop-code",
+            "xUnit": "fas fa-vial", "nUnit": "fas fa-flask", "msTest": "fas fa-check-circle",
+            "MediatR": "fas fa-exchange-alt", "CQRS": "fas fa-layer-group"
         };
         return iconMap[skillName] || "fas fa-code";
     }
 
+    function createSkillElement(skill) {
+        const skillDiv = document.createElement('div');
+        skillDiv.className = 'skill-item fade-up';
+        const iconClass = getSkillIcon(skill.name);
+        skillDiv.innerHTML = `<i class="${iconClass}"></i> <span>${skill.name}</span>`;
+        skillDiv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showTooltip(skillDiv, skill.desc);
+        });
+        skillDiv.addEventListener('mouseleave', () => hideTooltip());
+        return skillDiv;
+    }
+
+    function createProjectElement(proj) {
+        const projectCard = document.createElement('div');
+        projectCard.className = 'gradient-border fade-up';
+        projectCard.innerHTML = `
+            <div class="card-inner">
+                <div class="project-icon">
+                    <i class="fas ${proj.icon}"></i>
+                </div>
+                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">${proj.title}</h3>
+                <p style="color: #C2CAEC; margin: 0.8rem 0 1rem 0; line-height: 1.45; font-size: 0.85rem;">${proj.description}</p>
+                <div class="tech-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;">
+                    ${proj.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                </div>
+                <a href="${proj.repoLink}" target="_blank" class="project-demo-link" style="margin-top: auto;">
+                    <i class="fab fa-github"></i> Репозиторий
+                </a>
+            </div>
+        `;
+        return projectCard;
+    }
+
     function renderSkills() {
         const container = document.getElementById('skillsList');
+        const hiddenContainer = document.getElementById('hiddenSkillsList');
         if (!container) return;
+        
         container.innerHTML = '';
-        skillsWithDesc.forEach(skill => {
-            const skillDiv = document.createElement('div');
-            skillDiv.className = 'skill-item fade-up';
-            const iconClass = getSkillIcon(skill.name);
-            skillDiv.innerHTML = `<i class="${iconClass}"></i> <span>${skill.name}</span>`;
-            
-            skillDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showTooltip(skillDiv, skill.desc);
-            });
-            skillDiv.addEventListener('mouseleave', () => hideTooltip());
-            container.appendChild(skillDiv);
+        hiddenContainer.innerHTML = '';
+        
+        const visibleSkills = allSkillsWithDesc.slice(0, 12);
+        const hiddenSkills = allSkillsWithDesc.slice(12);
+        
+        visibleSkills.forEach(skill => {
+            container.appendChild(createSkillElement(skill));
+        });
+        
+        hiddenSkills.forEach(skill => {
+            hiddenContainer.appendChild(createSkillElement(skill));
         });
     }
     
-    document.addEventListener('click', function(e) {
-        if (activeTooltip && !e.target.closest('.skill-item')) hideTooltip();
-    });
-
     function renderProjects() {
-        const grid = document.getElementById('projectsGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        projectsData.forEach(proj => {
-            const projectCard = document.createElement('div');
-            projectCard.className = 'gradient-border fade-up';
-            projectCard.innerHTML = `
-                <div class="card-inner">
-                    <div class="project-icon">
-                        <i class="fas ${proj.icon}"></i>
-                    </div>
-                    <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">${proj.title}</h3>
-                    <p style="color: #C2CAEC; margin: 0.8rem 0 1rem 0; line-height: 1.45; font-size: 0.85rem;">${proj.description}</p>
-                    <div class="tech-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;">
-                        ${proj.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
-                    </div>
-                    <a href="${proj.repoLink}" target="_blank" class="project-demo-link" style="margin-top: auto;">
-                        <i class="fab fa-github"></i> Репозиторий
-                    </a>
-                </div>
-            `;
-            grid.appendChild(projectCard);
+        const container = document.getElementById('projectsGrid');
+        const hiddenContainer = document.getElementById('hiddenProjectsGrid');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        hiddenContainer.innerHTML = '';
+        
+        const visibleProjects = allProjectsData.slice(0, 4);
+        const hiddenProjects = allProjectsData.slice(4);
+        
+        visibleProjects.forEach(proj => {
+            container.appendChild(createProjectElement(proj));
         });
+        
+        hiddenProjects.forEach(proj => {
+            hiddenContainer.appendChild(createProjectElement(proj));
+        });
+    }
+
+    function setupExpandButtons() {
+        const skillsContainer = document.getElementById('hiddenSkillsContainer');
+        const skillsBtn = document.getElementById('showMoreSkillsBtn');
+        let skillsExpanded = false;
+        
+        if (skillsBtn) {
+            skillsBtn.addEventListener('click', () => {
+                if (!skillsExpanded) {
+                    const hiddenContent = document.getElementById('hiddenSkillsList');
+                    if (hiddenContent && hiddenContent.parentElement) {
+                        const innerDiv = hiddenContent.parentElement;
+                        const targetHeight = innerDiv.scrollHeight;
+                        skillsContainer.style.height = targetHeight + 'px';
+                        skillsBtn.textContent = 'Скрыть навыки';
+                        skillsExpanded = true;
+                        
+                        setTimeout(() => {
+                            skillsContainer.style.height = 'auto';
+                        }, 400);
+                    }
+                } else {
+                    const currentHeight = skillsContainer.scrollHeight;
+                    skillsContainer.style.height = currentHeight + 'px';
+                    
+                    setTimeout(() => {
+                        skillsContainer.style.height = '0px';
+                    }, 10);
+                    
+                    skillsBtn.textContent = 'Показать все навыки';
+                    skillsExpanded = false;
+                }
+            });
+        }
+        
+        const projectsContainer = document.getElementById('hiddenProjectsContainer');
+        const projectsBtn = document.getElementById('showMoreProjectsBtn');
+        let projectsExpanded = false;
+        
+        if (projectsBtn) {
+            projectsBtn.addEventListener('click', () => {
+                if (!projectsExpanded) {
+                    const hiddenContent = document.getElementById('hiddenProjectsGrid');
+                    if (hiddenContent && hiddenContent.parentElement) {
+                        const innerDiv = hiddenContent.parentElement;
+                        const targetHeight = innerDiv.scrollHeight;
+                        projectsContainer.style.height = targetHeight + 'px';
+                        projectsBtn.textContent = 'Скрыть проекты';
+                        projectsExpanded = true;
+                        
+                        setTimeout(() => {
+                            projectsContainer.style.height = 'auto';
+                        }, 400);
+                    }
+                } else {
+                    const currentHeight = projectsContainer.scrollHeight;
+                    projectsContainer.style.height = currentHeight + 'px';
+                    
+                    setTimeout(() => {
+                        projectsContainer.style.height = '0px';
+                    }, 10);
+                    
+                    projectsBtn.textContent = 'Показать все проекты';
+                    projectsExpanded = false;
+                }
+            });
+        }
     }
 
     const contactData = [
@@ -964,6 +1137,9 @@
         renderSkills();
         renderProjects();
         renderContacts();
+        setTimeout(() => {
+            setupExpandButtons();
+        }, 100);
         initScrollAnimations();
         setFooterYear();
         
