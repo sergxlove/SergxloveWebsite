@@ -25,6 +25,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+
+<div class="language-switcher">
+    <button class="lang-btn active" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
 <div class="global-violet-aura">
     <div class="floating-particle" style="width: 550px; height: 550px; top: -150px; left: -150px;"></div>
     <div class="floating-particle" style="width: 700px; height: 700px; bottom: -200px; right: -200px; background: rgba(155, 77, 255, 0.16);"></div>
@@ -52,14 +58,14 @@
             </div>
 
             <div class="hero-text fade-up">
-                <div class="badge-code">
+                <div class="badge-code" id="heroBadge">
                     <i class="fas fa-gem"></i> Middle .NET / C# developer
                 </div>
-                <h1>
+                <h1 id="heroTitle">
                     Профиль <span class="highlight">sergxlove developer</span><br>
                     C# и .NET
                 </h1>
-                <p style="font-size: 1.1rem; max-width: 550px; margin: 1.5rem 0 1rem 0; color: #CEC6FF;">
+                <p style="font-size: 1.1rem; max-width: 550px; margin: 1.5rem 0 1rem 0; color: #CEC6FF;" id="heroDescription">
                     Микросервисы, API, Winform/WPF/Avalonia приложения, AI, Telegram bots, Тестирование, DevOps, Администрирование и тд.
                 </p>
             </div>
@@ -69,7 +75,7 @@
     <section id="tech-stack-section" style="padding-bottom: 2rem;">
         <div class="container">
             <div class="section-wrapper">
-                <div class="section-title">⚡ Стек</div>
+                <div class="section-title" id="techTitle">⚡ Стек</div>
                 <div class="section-line"></div>
             </div>
             <div class="skills-cloud" id="skillsList"></div>
@@ -87,7 +93,7 @@
     <section id="projects-section" style="padding-top: 2rem;">
         <div class="container">
             <div class="section-wrapper">
-                <div class="section-title">🚀 Проекты</div>
+                <div class="section-title" id="projectsTitle">🚀 Проекты</div>
                 <div class="section-line"></div>
             </div>
             <div class="projects-grid" id="projectsGrid"></div>
@@ -100,7 +106,7 @@
                 <button class="show-more-btn" id="showMoreProjectsBtn">Показать все проекты</button>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
-                <p style="color: #AE9FFF;"><i class="fab fa-github"></i> Больше кода на GitHub — <strong style="color:#b77cff;">github.com/sergxlove</strong></p>
+                <p style="color: #AE9FFF;" id="githubText"><i class="fab fa-github"></i> Больше кода на GitHub — <strong style="color:#b77cff;">github.com/sergxlove</strong></p>
             </div>
         </div>
     </section>
@@ -108,176 +114,198 @@
     <section id="contact" class="contact">
         <div class="container" style="text-align: center;">
             <div class="section-wrapper">
-                <div class="section-title" style="margin-bottom: 1rem;">Контакты</div>
+                <div class="section-title" style="margin-bottom: 1rem;" id="contactTitle">Контакты</div>
                 <div class="section-line" style="bottom: 0;"></div>
             </div>
             <div class="contact-links" id="contactLinks"></div>
         </div>
     </section>
 
-    <footer>
+    <footer id="footer">
         <i class="fas fa-crown" style="color:#b77cff;"></i> sergxlove · C#/.NET developer © 2026
     </footer>
 </div>
 
 <script>
-    let currentRipple = null;
-    let rippleTimeout = null;
-    
-    function createRipple(event) {
-        const avatarBlock = document.getElementById('avatarBlock');
-        const wrapper = document.getElementById('avatarWrapper');
-        
-        if (currentRipple && currentRipple.remove) {
-            currentRipple.remove();
-            currentRipple = null;
+    const translations = {
+        ru: {
+            heroBadge: '<i class="fas fa-gem"></i> Middle .NET / C# developer',
+            heroTitle: 'Профиль <span class="highlight">sergxlove developer</span><br>C# и .NET',
+            heroDescription: 'Микросервисы, API, Winform/WPF/Avalonia приложения, AI, Telegram bots, Тестирование, DevOps, Администрирование и тд.',
+            techTitle: '⚡ Стек',
+            projectsTitle: '🚀 Проекты',
+            contactTitle: 'Контакты',
+            showMoreSkills: 'Показать все навыки',
+            showLessSkills: 'Скрыть навыки',
+            showMoreProjects: 'Показать все проекты',
+            showLessProjects: 'Скрыть проекты',
+            githubText: '<i class="fab fa-github"></i> Больше кода на GitHub — <strong style="color:#b77cff;">github.com/sergxlove</strong>',
+            repository: 'Репозиторий'
+        },
+        en: {
+            heroBadge: '<i class="fas fa-gem"></i> Middle .NET / C# developer',
+            heroTitle: 'Profile <span class="highlight">sergxlove developer</span><br>C# and .NET',
+            heroDescription: 'Microservices, API, Winform/WPF/Avalonia apps, AI, Telegram bots, Testing, DevOps, Administration, etc.',
+            techTitle: '⚡ Tech Stack',
+            projectsTitle: '🚀 Projects',
+            contactTitle: 'Contacts',
+            showMoreSkills: 'Show all skills',
+            showLessSkills: 'Hide skills',
+            showMoreProjects: 'Show all projects',
+            showLessProjects: 'Hide projects',
+            githubText: '<i class="fab fa-github"></i> More code on GitHub — <strong style="color:#b77cff;">github.com/sergxlove</strong>',
+            repository: 'Repository'
         }
-        if (rippleTimeout) {
-            clearTimeout(rippleTimeout);
-            rippleTimeout = null;
-        }
-        
-        const rect = wrapper.getBoundingClientRect();
-        const blockRect = avatarBlock.getBoundingClientRect();
-        
-        const ripple = document.createElement('div');
-        ripple.className = 'ripple';
-        
-        const centerX = (rect.left + rect.width / 2) - blockRect.left;
-        const centerY = (rect.top + rect.height / 2) - blockRect.top;
-        
-        ripple.style.left = centerX + 'px';
-        ripple.style.top = centerY + 'px';
-        ripple.style.width = '0px';
-        ripple.style.height = '0px';
-        
-        currentRipple = ripple;
-        avatarBlock.appendChild(ripple);
-        
-        rippleTimeout = setTimeout(() => {
-            if (currentRipple && currentRipple.remove) {
-                currentRipple.remove();
-                currentRipple = null;
-            }
-            rippleTimeout = null;
-        }, 600);
-    }
-
-    function showCopyToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'copy-toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    }
+    };
 
     const allProjectsData = [
         {
-            title: "Skill Trade",
-            description: "Мультипользовательская образовательная платформа на микросервисной архитектуре. Студенты находят и проходят платные курсы с отслеживанием прогресса, авторы создают курсы через визуальный редактор, администраторы модерируют контент.",
+            title: { ru: "Skill Trade", en: "Skill Trade" },
+            description: { 
+                ru: "Мультипользовательская образовательная платформа на микросервисной архитектуре. Студенты находят и проходят платные курсы с отслеживанием прогресса, авторы создают курсы через визуальный редактор, администраторы модерируют контент.",
+                en: "Multi-user educational platform on microservice architecture. Students find and take paid courses with progress tracking, authors create courses via visual editor, admins moderate content."
+            },
             tech: [".NET 8", "YARP Gateway", "PostgreSQL", "EF Core", "MinIO", "JWT"],
             icon: "fa-graduation-cap",
             repoLink: "https://github.com/sergxlove/SkillTrade"
         },
         {
-            title: "System Notification People",
-            description: "Программно-аппаратная система оповещения персонала предприятия о ЧС. Дипломный проект, включающий серверную часть, клиентские приложения и интеграцию с аппаратными средствами оповещения.",
+            title: { ru: "System Notification People", en: "System Notification People" },
+            description: { 
+                ru: "Программно-аппаратная система оповещения персонала предприятия о ЧС. Дипломный проект, включающий серверную часть, клиентские приложения и интеграцию с аппаратными средствами оповещения.",
+                en: "Hardware-software system for enterprise personnel emergency notification. Graduation project including server part, client applications and integration with hardware notification devices."
+            },
             tech: ["C#", ".NET", "SignalR", "IoT", "Real-time"],
             icon: "fa-bell",
             repoLink: "https://github.com/sergxlove/SystemNotificationPersonal"
         },
         {
-            title: "Website Builder For Businesses",
-            description: "Интуитивный конструктор сайтов с блочной структурой, drag-and-drop редактором и предпросмотром в реальном времени. Экспорт чистого HTML/CSS, публикация на хостинг, интеграция с сервисами.",
+            title: { ru: "Website Builder For Businesses", en: "Website Builder For Businesses" },
+            description: { 
+                ru: "Интуитивный конструктор сайтов с блочной структурой, drag-and-drop редактором и предпросмотром в реальном времени. Экспорт чистого HTML/CSS, публикация на хостинг, интеграция с сервисами.",
+                en: "Intuitive website builder with block structure, drag-and-drop editor and real-time preview. Export clean HTML/CSS, publish to hosting, integrate with services."
+            },
             tech: ["ASP.NET Core", "JavaScript", "HTML/CSS", "Drag&Drop"],
             icon: "fa-code-branch",
             repoLink: "https://github.com/sergxlove/WebsiteBuilderForBusinesses"
         },
         {
-            title: "Word Repeat",
-            description: "Умный тренажёр английских слов на основе метода интервальных повторений. Режимы: карточки, тесты на соответствие, аудирование, письменный ввод. Адаптивная сложность, графики прогресса, личная база слов.",
+            title: { ru: "Word Repeat", en: "Word Repeat" },
+            description: { 
+                ru: "Умный тренажёр английских слов на основе метода интервальных повторений. Режимы: карточки, тесты на соответствие, аудирование, письменный ввод. Адаптивная сложность, графики прогресса, личная база слов.",
+                en: "Smart English word trainer based on spaced repetition method. Modes: flashcards, matching tests, listening, written input. Adaptive difficulty, progress charts, personal word base."
+            },
             tech: ["C#", "WPF", "SQLite", "MVVM"],
             icon: "fa-language",
             repoLink: "https://github.com/sergxlove/WordRepeat"
         },
         {
-            title: "Dating Servise",
-            description: "Полнофункциональный бэкенд для приложения знакомств на микросервисной архитектуре. Управление пользователями, алгоритмический подбор пар, чат в реальном времени, уведомления, обработка медиафайлов.",
+            title: { ru: "Dating Service", en: "Dating Service" },
+            description: { 
+                ru: "Полнофункциональный бэкенд для приложения знакомств на микросервисной архитектуре. Управление пользователями, алгоритмический подбор пар, чат в реальном времени, уведомления, обработка медиафайлов.",
+                en: "Full-featured backend for dating app on microservice architecture. User management, algorithmic matching, real-time chat, notifications, media processing."
+            },
             tech: ["ASP.NET Core", "PostgreSQL", "MongoDB", "Redis", "RabbitMQ", "gRPC"],
             icon: "fa-heart",
             repoLink: "https://github.com/sergxlove/DattingService"
         },
         {
-            title: "Banking System",
-            description: "Веб-приложение с базовыми функциями банковской системы: регистрация клиентов, открытие и закрытие счетов и депозитов, оформление кредитов, переводы средств. Личный кабинет клиента.",
+            title: { ru: "Banking System", en: "Banking System" },
+            description: { 
+                ru: "Веб-приложение с базовыми функциями банковской системы: регистрация клиентов, открытие и закрытие счетов и депозитов, оформление кредитов, переводы средств. Личный кабинет клиента.",
+                en: "Web application with basic banking system functions: client registration, opening and closing accounts and deposits, loan applications, fund transfers. Client personal account."
+            },
             tech: ["C#", "ASP.NET Core", "Entity Framework", "SQL Server"],
             icon: "fa-university",
             repoLink: "https://github.com/sergxlove/BankingSystem"
         },
         {
-            title: "Progres OS",
-            description: "Центр управления целями, соединяющий стратегическое видение с ежедневными действиями. Разбивка годовых целей на квартальные, месячные и ежедневные шаги, визуальная аналитика прогресса, геймификация привычек.",
+            title: { ru: "Progres OS", en: "Progres OS" },
+            description: { 
+                ru: "Центр управления целями, соединяющий стратегическое видение с ежедневными действиями. Разбивка годовых целей на квартальные, месячные и ежедневные шаги, визуальная аналитика прогресса, геймификация привычек.",
+                en: "Goal management hub connecting strategic vision with daily actions. Breaking down annual goals into quarterly, monthly and daily steps, visual progress analytics, habit gamification."
+            },
             tech: ["C#", ".NET", "Blazor", "Analytics"],
             icon: "fa-bullseye",
             repoLink: "https://github.com/sergxlove/ProgressOS"
         },
         {
-            title: "SourceStat",
-            description: "Легковесный анализатор кода для подсчёта строк в проектах на разных языках. Игнорирование пустых строк и комментариев, рекурсивный обход папок, поддержка популярных языков. Доступен в WPF и CLI версиях.",
+            title: { ru: "SourceStat", en: "SourceStat" },
+            description: { 
+                ru: "Легковесный анализатор кода для подсчёта строк в проектах на разных языках. Игнорирование пустых строк и комментариев, рекурсивный обход папок, поддержка популярных языков. Доступен в WPF и CLI версиях.",
+                en: "Lightweight code analyzer for counting lines in projects of different languages. Ignoring empty lines and comments, recursive folder traversal, support for popular languages. Available in WPF and CLI versions."
+            },
             tech: ["C#", "WPF", "CLI", "Parsing"],
             icon: "fa-bullseye",
             repoLink: "https://github.com/sergxlove/SourceStat"
         }
     ];
 
-    // ВСЕ НАВЫКИ
     const allSkillsWithDesc = [
-        { name: "C++", desc: "Мощный язык системного программирования для высокопроизводительных модулей" },
-        { name: "C#", desc: "Основной язык разработки: ООП, асинхронность, LINQ, Pattern Matching" },
-        { name: "Python", desc: "Скрипты для автоматизации, прототипирование, анализ данных" },
-        { name: "HTML5", desc: "Семантическая разметка, современные веб-стандарты" },
-        { name: "CSS", desc: "Адаптивный дизайн, Flexbox, Grid, анимации" },
-        { name: "JavaScript", desc: "Интерактивность на клиенте, ES6+, асинхронные запросы" },
-        { name: ".NET", desc: "Кроссплатформенная экосистема, ASP.NET Core, классовые библиотеки" },
-        { name: "EF Core", desc: "ORM для работы с БД: Code First, миграции, LINQ запросы" },
-        { name: "ASP.NET", desc: "Создание веб-API и MVC приложений, REST, DI, Middleware" },
-        { name: "Dapper", desc: "Микро-ORM с высокой производительностью для сложных SQL" },
-        { name: "WinForms", desc: "Быстрая разработка десктоп приложений для Windows" },
-        { name: "WPF", desc: "Современный UI с XAML, MVVM, Data Binding, стили" },
-        { name: "Avalonia", desc: "Кроссплатформенный WPF-подобный фреймворк" },
-        { name: "Unity", desc: "Игровой движок для 2D/3D игр на C#" },
-        { name: "MonoGame", desc: "Кроссплатформенный фреймворк для создания игр" },
-        { name: "ML.NET", desc: "Machine Learning для .NET разработчиков" },
-        { name: "PostgreSQL", desc: "Мощная объектно-реляционная СУБД с открытым кодом" },
-        { name: "SQLite", desc: "Легковесная встраиваемая БД для десктопа и мобилок" },
-        { name: "MongoDB", desc: "NoSQL документо-ориентированная БД" },
-        { name: "MSSQL", desc: "Реляционная СУБД от Microsoft" },
-        { name: "Git", desc: "Система контроля версий, ветвление, GitHub Flow" },
-        { name: "Docker", desc: "Контейнеризация приложений, Docker Compose" },
-        { name: "Kafka", desc: "Распределённая потоковая платформа для событий" },
-        { name: "Redis", desc: "In-memory хранилище, кэширование, очереди" },
-        { name: "AWS S3", desc: "Объектное хранилище в облаке от Amazon" },
-        { name: "PowerShell", desc: "Автоматизация администрирования" },
-        { name: "RabbitMQ", desc: "Брокер сообщений для микросервисов" },
-        { name: "Elasticsearch", desc: "Поисковый и аналитический движок" },
-        { name: "Logstash", desc: "Сбор и обработка логов" },
-        { name: "Kibana", desc: "Визуализация данных из Elasticsearch" },
-        { name: "YARP", desc: "Reverse Proxy на .NET" },
-        { name: "Seq", desc: "Сервер для структурированного логирования" },
-        { name: "Visual Studio", desc: "Полноценная IDE для .NET разработки" },
-        { name: "VS Code", desc: "Лёгкий редактор с расширениями" },
-        { name: "Windows", desc: "Основная платформа разработки" },
-        { name: "Ubuntu", desc: "Популярный дистрибутив Linux" },
-        { name: "Debian", desc: "Стабильный дистрибутив Linux" },
-        { name: "Astra Linux", desc: "Российский дистрибутив для защищённых систем" },
-        { name: "xUnit", desc: "Фреймворк для unit-тестирования .NET приложений. Поддержка теорий, фактов, асинхронных тестов" },
-        { name: "nUnit", desc: "Популярный фреймворк для unit-тестирования. Мощные assertions, параметризованные тесты, категории" },
-        { name: "msTest", desc: "Официальный тестовый фреймворк от Microsoft. Интеграция с VSTest, Data Driven Testing" },
-        { name: "MediatR", desc: "Библиотека для реализации паттерна Mediator в .NET. Упрощает обработку запросов, команд и уведомлений, уменьшает связанность компонентов" },
-        { name: "CQRS", desc: "Архитектурный паттерн Command Query Responsibility Segregation. Разделение операций чтения и записи для масштабируемых систем" }
+        { name: "C++", desc: { ru: "Мощный язык системного программирования для высокопроизводительных модулей", en: "Powerful system programming language for high-performance modules" } },
+        { name: "C#", desc: { ru: "Основной язык разработки: ООП, асинхронность, LINQ, Pattern Matching", en: "Main development language: OOP, async, LINQ, Pattern Matching" } },
+        { name: "Python", desc: { ru: "Скрипты для автоматизации, прототипирование, анализ данных", en: "Automation scripts, prototyping, data analysis" } },
+        { name: "HTML5", desc: { ru: "Семантическая разметка, современные веб-стандарты", en: "Semantic markup, modern web standards" } },
+        { name: "CSS", desc: { ru: "Адаптивный дизайн, Flexbox, Grid, анимации", en: "Responsive design, Flexbox, Grid, animations" } },
+        { name: "JavaScript", desc: { ru: "Интерактивность на клиенте, ES6+, асинхронные запросы", en: "Client-side interactivity, ES6+, async requests" } },
+        { name: ".NET", desc: { ru: "Кроссплатформенная экосистема, ASP.NET Core, классовые библиотеки", en: "Cross-platform ecosystem, ASP.NET Core, class libraries" } },
+        { name: "EF Core", desc: { ru: "ORM для работы с БД: Code First, миграции, LINQ запросы", en: "ORM for database: Code First, migrations, LINQ queries" } },
+        { name: "ASP.NET", desc: { ru: "Создание веб-API и MVC приложений, REST, DI, Middleware", en: "Creating Web API and MVC apps, REST, DI, Middleware" } },
+        { name: "Dapper", desc: { ru: "Микро-ORM с высокой производительностью для сложных SQL", en: "High-performance micro-ORM for complex SQL" } },
+        { name: "WinForms", desc: { ru: "Быстрая разработка десктоп приложений для Windows", en: "Rapid Windows desktop app development" } },
+        { name: "WPF", desc: { ru: "Современный UI с XAML, MVVM, Data Binding, стили", en: "Modern UI with XAML, MVVM, Data Binding, styles" } },
+        { name: "Avalonia", desc: { ru: "Кроссплатформенный WPF-подобный фреймворк", en: "Cross-platform WPF-like framework" } },
+        { name: "Unity", desc: { ru: "Игровой движок для 2D/3D игр на C#", en: "2D/3D game engine with C#" } },
+        { name: "MonoGame", desc: { ru: "Кроссплатформенный фреймворк для создания игр", en: "Cross-platform game development framework" } },
+        { name: "ML.NET", desc: { ru: "Machine Learning для .NET разработчиков", en: "Machine Learning for .NET developers" } },
+        { name: "PostgreSQL", desc: { ru: "Мощная объектно-реляционная СУБД с открытым кодом", en: "Powerful open-source object-relational DBMS" } },
+        { name: "SQLite", desc: { ru: "Легковесная встраиваемая БД для десктопа и мобилок", en: "Lightweight embedded database for desktop/mobile" } },
+        { name: "MongoDB", desc: { ru: "NoSQL документо-ориентированная БД", en: "NoSQL document-oriented database" } },
+        { name: "MSSQL", desc: { ru: "Реляционная СУБД от Microsoft", en: "Relational DBMS from Microsoft" } },
+        { name: "Git", desc: { ru: "Система контроля версий, ветвление, GitHub Flow", en: "Version control system, branching, GitHub Flow" } },
+        { name: "Docker", desc: { ru: "Контейнеризация приложений, Docker Compose", en: "Application containerization, Docker Compose" } },
+        { name: "Kafka", desc: { ru: "Распределённая потоковая платформа для событий", en: "Distributed streaming platform for events" } },
+        { name: "Redis", desc: { ru: "In-memory хранилище, кэширование, очереди", en: "In-memory storage, caching, queues" } },
+        { name: "AWS S3", desc: { ru: "Объектное хранилище в облаке от Amazon", en: "Object storage in Amazon cloud" } },
+        { name: "PowerShell", desc: { ru: "Автоматизация администрирования", en: "Administration automation" } },
+        { name: "RabbitMQ", desc: { ru: "Брокер сообщений для микросервисов", en: "Message broker for microservices" } },
+        { name: "Elasticsearch", desc: { ru: "Поисковый и аналитический движок", en: "Search and analytics engine" } },
+        { name: "Logstash", desc: { ru: "Сбор и обработка логов", en: "Log collection and processing" } },
+        { name: "Kibana", desc: { ru: "Визуализация данных из Elasticsearch", en: "Data visualization from Elasticsearch" } },
+        { name: "YARP", desc: { ru: "Reverse Proxy на .NET", en: "Reverse Proxy on .NET" } },
+        { name: "Seq", desc: { ru: "Сервер для структурированного логирования", en: "Structured logging server" } },
+        { name: "Visual Studio", desc: { ru: "Полноценная IDE для .NET разработки", en: "Full-featured IDE for .NET development" } },
+        { name: "VS Code", desc: { ru: "Лёгкий редактор с расширениями", en: "Lightweight editor with extensions" } },
+        { name: "Windows", desc: { ru: "Основная платформа разработки", en: "Primary development platform" } },
+        { name: "Ubuntu", desc: { ru: "Популярный дистрибутив Linux", en: "Popular Linux distribution" } },
+        { name: "Debian", desc: { ru: "Стабильный дистрибутив Linux", en: "Stable Linux distribution" } },
+        { name: "Astra Linux", desc: { ru: "Российский дистрибутив для защищённых систем", en: "Russian Linux distribution for secure systems" } },
+        { name: "xUnit", desc: { ru: "Фреймворк для unit-тестирования .NET приложений. Поддержка теорий, фактов, асинхронных тестов", en: "Unit testing framework for .NET apps. Support for theories, facts, async tests" } },
+        { name: "nUnit", desc: { ru: "Популярный фреймворк для unit-тестирования. Мощные assertions, параметризованные тесты, категории", en: "Popular unit testing framework with powerful assertions, parameterized tests, categories" } },
+        { name: "msTest", desc: { ru: "Официальный тестовый фреймворк от Microsoft. Интеграция с VSTest, Data Driven Testing", en: "Official Microsoft testing framework. Integration with VSTest, Data Driven Testing" } },
+        { name: "MediatR", desc: { ru: "Библиотека для реализации паттерна Mediator в .NET. Упрощает обработку запросов, команд и уведомлений, уменьшает связанность компонентов", en: "Mediator pattern implementation for .NET. Simplifies request, command and notification handling, reduces component coupling" } },
+        { name: "CQRS", desc: { ru: "Архитектурный паттерн Command Query Responsibility Segregation. Разделение операций чтения и записи для масштабируемых систем", en: "Command Query Responsibility Segregation pattern. Separates read and write operations for scalable systems" } }
     ];
 
+    let currentLang = 'ru';
     let activeTooltip = null;
+    let currentRipple = null;
+    let rippleTimeout = null;
+    let skillsExpanded = false;
+    let projectsExpanded = false;
+    let scrollObserver = null;
+
+    function getSkillDesc(skill) {
+        return skill.desc[currentLang] || skill.desc.ru;
+    }
+
+    function getProjectTitle(project) {
+        return project.title[currentLang] || project.title.ru;
+    }
+
+    function getProjectDescription(project) {
+        return project.description[currentLang] || project.description.ru;
+    }
 
     function showTooltip(element, text) {
         if (activeTooltip) activeTooltip.remove();
@@ -339,7 +367,7 @@
         skillDiv.innerHTML = `<i class="${iconClass}"></i> <span>${skill.name}</span>`;
         skillDiv.addEventListener('click', (e) => {
             e.stopPropagation();
-            showTooltip(skillDiv, skill.desc);
+            showTooltip(skillDiv, getSkillDesc(skill));
         });
         skillDiv.addEventListener('mouseleave', () => hideTooltip());
         return skillDiv;
@@ -353,17 +381,46 @@
                 <div class="project-icon">
                     <i class="fas ${proj.icon}"></i>
                 </div>
-                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">${proj.title}</h3>
-                <p style="color: #C2CAEC; margin: 0.8rem 0 1rem 0; line-height: 1.45; font-size: 0.85rem;">${proj.description}</p>
+                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">${getProjectTitle(proj)}</h3>
+                <p style="color: #C2CAEC; margin: 0.8rem 0 1rem 0; line-height: 1.45; font-size: 0.85rem;">${getProjectDescription(proj)}</p>
                 <div class="tech-tags-container" style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;">
                     ${proj.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
                 </div>
                 <a href="${proj.repoLink}" target="_blank" class="project-demo-link" style="margin-top: auto;">
-                    <i class="fab fa-github"></i> Репозиторий
+                    <i class="fab fa-github"></i> ${translations[currentLang].repository}
                 </a>
             </div>
         `;
         return projectCard;
+    }
+
+    function createContactElement(contact) {
+        const a = document.createElement('a');
+        a.className = 'contact-card fade-up';
+        a.href = contact.link;
+        if (!contact.isEmail) {
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+        }
+        a.innerHTML = `<i class="${contact.icon}"></i> <span>${contact.platform} / ${contact.username}</span>`;
+
+        if (contact.isEmail) {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(contact.username).then(() => {
+                    showCopyToast("✅ Email скопирован: " + contact.username);
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = contact.username;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showCopyToast("📋 Email скопирован: " + contact.username);
+                });
+            });
+        }
+        return a;
     }
 
     function renderSkills() {
@@ -384,6 +441,8 @@
         hiddenSkills.forEach(skill => {
             hiddenContainer.appendChild(createSkillElement(skill));
         });
+        
+        observeNewElements();
     }
     
     function renderProjects() {
@@ -404,28 +463,75 @@
         hiddenProjects.forEach(proj => {
             hiddenContainer.appendChild(createProjectElement(proj));
         });
+        
+        observeNewElements();
     }
 
+    function renderContacts() {
+        const container = document.getElementById('contactLinks');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        contactData.forEach(contact => {
+            container.appendChild(createContactElement(contact));
+        });
+        
+        observeNewElements();
+    }
+
+    function observeNewElements() {
+        if (scrollObserver) {
+            const elements = document.querySelectorAll('.fade-up:not(.visible)');
+            elements.forEach(el => scrollObserver.observe(el));
+        }
+    }
+
+    function updateStaticTexts() {
+        const t = translations[currentLang];
+        document.getElementById('heroBadge').innerHTML = t.heroBadge;
+        document.getElementById('heroTitle').innerHTML = t.heroTitle;
+        document.getElementById('heroDescription').innerHTML = t.heroDescription;
+        document.getElementById('techTitle').innerHTML = t.techTitle;
+        document.getElementById('projectsTitle').innerHTML = t.projectsTitle;
+        document.getElementById('contactTitle').innerHTML = t.contactTitle;
+        document.getElementById('githubText').innerHTML = t.githubText;
+        
+        const showMoreSkillsBtn = document.getElementById('showMoreSkillsBtn');
+        const showMoreProjectsBtn = document.getElementById('showMoreProjectsBtn');
+        
+        if (showMoreSkillsBtn) {
+            showMoreSkillsBtn.textContent = skillsExpanded ? t.showLessSkills : t.showMoreSkills;
+        }
+        
+        if (showMoreProjectsBtn) {
+            showMoreProjectsBtn.textContent = projectsExpanded ? t.showLessProjects : t.showMoreProjects;
+        }
+        
+        setFooterYear();
+    }
+    
     function setupExpandButtons() {
         const skillsContainer = document.getElementById('hiddenSkillsContainer');
         const skillsBtn = document.getElementById('showMoreSkillsBtn');
-        let skillsExpanded = false;
         
-        if (skillsBtn) {
+        if (skillsBtn && !skillsBtn.hasListener) {
+            skillsBtn.hasListener = true;
             skillsBtn.addEventListener('click', () => {
+                const t = translations[currentLang];
                 if (!skillsExpanded) {
-                    const hiddenContent = document.getElementById('hiddenSkillsList');
-                    if (hiddenContent && hiddenContent.parentElement) {
-                        const innerDiv = hiddenContent.parentElement;
-                        const targetHeight = innerDiv.scrollHeight;
-                        skillsContainer.style.height = targetHeight + 'px';
-                        skillsBtn.textContent = 'Скрыть навыки';
-                        skillsExpanded = true;
-                        
-                        setTimeout(() => {
-                            skillsContainer.style.height = 'auto';
-                        }, 400);
-                    }
+                    skillsContainer.style.height = 'auto';
+                    const height = skillsContainer.scrollHeight;
+                    skillsContainer.style.height = '0px';
+                    setTimeout(() => {
+                        skillsContainer.style.height = height + 'px';
+                    }, 10);
+                    skillsBtn.textContent = t.showLessSkills;
+                    skillsExpanded = true;
+                    
+                    setTimeout(() => {
+                        skillsContainer.style.height = 'auto';
+                        observeNewElements();
+                    }, 400);
                 } else {
                     const currentHeight = skillsContainer.scrollHeight;
                     skillsContainer.style.height = currentHeight + 'px';
@@ -434,7 +540,7 @@
                         skillsContainer.style.height = '0px';
                     }, 10);
                     
-                    skillsBtn.textContent = 'Показать все навыки';
+                    skillsBtn.textContent = t.showMoreSkills;
                     skillsExpanded = false;
                 }
             });
@@ -442,23 +548,25 @@
         
         const projectsContainer = document.getElementById('hiddenProjectsContainer');
         const projectsBtn = document.getElementById('showMoreProjectsBtn');
-        let projectsExpanded = false;
         
-        if (projectsBtn) {
+        if (projectsBtn && !projectsBtn.hasListener) {
+            projectsBtn.hasListener = true;
             projectsBtn.addEventListener('click', () => {
+                const t = translations[currentLang];
                 if (!projectsExpanded) {
-                    const hiddenContent = document.getElementById('hiddenProjectsGrid');
-                    if (hiddenContent && hiddenContent.parentElement) {
-                        const innerDiv = hiddenContent.parentElement;
-                        const targetHeight = innerDiv.scrollHeight;
-                        projectsContainer.style.height = targetHeight + 'px';
-                        projectsBtn.textContent = 'Скрыть проекты';
-                        projectsExpanded = true;
-                        
-                        setTimeout(() => {
-                            projectsContainer.style.height = 'auto';
-                        }, 400);
-                    }
+                    projectsContainer.style.height = 'auto';
+                    const height = projectsContainer.scrollHeight;
+                    projectsContainer.style.height = '0px';
+                    setTimeout(() => {
+                        projectsContainer.style.height = height + 'px';
+                    }, 10);
+                    projectsBtn.textContent = t.showLessProjects;
+                    projectsExpanded = true;
+                    
+                    setTimeout(() => {
+                        projectsContainer.style.height = 'auto';
+                        observeNewElements();
+                    }, 400);
                 } else {
                     const currentHeight = projectsContainer.scrollHeight;
                     projectsContainer.style.height = currentHeight + 'px';
@@ -467,7 +575,7 @@
                         projectsContainer.style.height = '0px';
                     }, 10);
                     
-                    projectsBtn.textContent = 'Показать все проекты';
+                    projectsBtn.textContent = t.showMoreProjects;
                     projectsExpanded = false;
                 }
             });
@@ -480,75 +588,98 @@
         { platform: "Email", username: "sergxlove.dev@gmail.com", icon: "fas fa-envelope", link: "mailto:sergxlove.dev@gmail.com", isEmail: true }
     ];
 
-    function renderContacts() {
-        const container = document.getElementById('contactLinks');
-        if (!container) return;
-        container.innerHTML = '';
-        contactData.forEach(contact => {
-            const a = document.createElement('a');
-            a.className = 'contact-card fade-up';
-            a.href = contact.link;
-            if (!contact.isEmail) {
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-            }
-            a.innerHTML = `<i class="${contact.icon}"></i> <span>${contact.platform} / ${contact.username}</span>`;
+    function showCopyToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
 
-            if (contact.isEmail) {
-                a.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    navigator.clipboard.writeText(contact.username).then(() => {
-                        showCopyToast("✅ Email скопирован: " + contact.username);
-                    }).catch(() => {
-                        const textarea = document.createElement('textarea');
-                        textarea.value = contact.username;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                        showCopyToast("📋 Email скопирован: " + contact.username);
-                    });
-                });
+    function createRipple(event) {
+        const avatarBlock = document.getElementById('avatarBlock');
+        const wrapper = document.getElementById('avatarWrapper');
+        
+        if (currentRipple && currentRipple.remove) {
+            currentRipple.remove();
+            currentRipple = null;
+        }
+        if (rippleTimeout) {
+            clearTimeout(rippleTimeout);
+            rippleTimeout = null;
+        }
+        
+        const rect = wrapper.getBoundingClientRect();
+        const blockRect = avatarBlock.getBoundingClientRect();
+        
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        
+        const centerX = (rect.left + rect.width / 2) - blockRect.left;
+        const centerY = (rect.top + rect.height / 2) - blockRect.top;
+        
+        ripple.style.left = centerX + 'px';
+        ripple.style.top = centerY + 'px';
+        ripple.style.width = '0px';
+        ripple.style.height = '0px';
+        
+        currentRipple = ripple;
+        avatarBlock.appendChild(ripple);
+        
+        rippleTimeout = setTimeout(() => {
+            if (currentRipple && currentRipple.remove) {
+                currentRipple.remove();
+                currentRipple = null;
             }
-            
-            container.appendChild(a);
-        });
+            rippleTimeout = null;
+        }, 600);
     }
 
     function initScrollAnimations() {
-        const elements = document.querySelectorAll('.fade-up');
-        const observer = new IntersectionObserver((entries) => {
+        scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    scrollObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.15 });
-        elements.forEach(el => observer.observe(el));
-        setTimeout(() => {
-            document.querySelectorAll('.fade-up').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 80) el.classList.add('visible');
-            });
-        }, 200);
+        
+        const elements = document.querySelectorAll('.fade-up');
+        elements.forEach(el => scrollObserver.observe(el));
     }
 
     function setFooterYear() {
-        const footer = document.querySelector('footer');
+        const footer = document.getElementById('footer');
         if (footer) {
             const currentYear = new Date().getFullYear();
             footer.innerHTML = `<i class="fas fa-crown" style="color:#b77cff;"></i> sergxlove · C#/.NET developer © ${currentYear}`;
         }
     }
 
+    function changeLanguage(lang) {
+        currentLang = lang;
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        updateStaticTexts();
+        renderSkills();
+        renderProjects();
+        
+        document.documentElement.lang = lang === 'ru' ? 'ru' : 'en';
+    }
+
     function initPortfolio() {
         renderSkills();
         renderProjects();
         renderContacts();
-        setTimeout(() => {
-            setupExpandButtons();
-        }, 100);
+        setupExpandButtons();
         initScrollAnimations();
         setFooterYear();
         
@@ -556,6 +687,13 @@
         if (avatarBlock) {
             avatarBlock.addEventListener('click', createRipple);
         }
+        
+        const langButtons = document.querySelectorAll('.lang-btn');
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                changeLanguage(btn.dataset.lang);
+            });
+        });
     }
 
     window.addEventListener('DOMContentLoaded', initPortfolio);
