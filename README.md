@@ -7,6 +7,12 @@
 ![Static Badge](https://img.shields.io/badge/developer-sergxlove-green)
 ![Static Badge](https://img.shields.io/badge/year-2026-green)
 
+## Stack 
+
+![Static Badge](https://img.shields.io/badge/language-HTML-red)
+![Static Badge](https://img.shields.io/badge/language-CSS-red)
+![Static Badge](https://img.shields.io/badge/language-JavaScript-red)
+
 ## About 
 
 Sergxlove WebSite is a minimalist one-page website with animated glowing neon typography and smooth rainbow gradient animation.
